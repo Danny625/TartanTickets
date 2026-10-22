@@ -1,0 +1,11 @@
+{
+  "environment": "Local reproduction using independently loaded route modules",
+  "getStatus": 200,
+  "sampleName": "Sample Alex",
+  "sampleStatusShown": "valid",
+  "postStatus": 404,
+  "response": {
+    "message": "Invalid ticket"
+  },
+  "conclusion": "The exact GET token is unknown to a separately initialized POST module store."
+}

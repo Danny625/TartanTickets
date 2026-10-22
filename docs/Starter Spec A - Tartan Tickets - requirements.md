@@ -100,6 +100,6 @@ HW3 Part B implements **Story 6: Check-in**, alongside the existing Story 1 even
 Assignment constraints:
 - **Simulated payments only:** no real payments, Stripe integration, or card collection. Story 6 needs no payment flow.
 - **Typed names instead of authentication:** an officer name is a demo label, not verified identity, officer authorization, SSO, or club membership.
-- **Server-memory storage only:** tickets and check-in state reset on process restart/deploy and are not shared across Vercel instances. Duplicate prevention is guaranteed only inside one running server process, not across instances.
+- **Server-memory storage only:** mutable ticket/check-in state resets on process restart/deploy and is not shared across Vercel instances. Public sample-token identities are fixed source fixtures so every instance recognizes them. Duplicate prevention is guaranteed only inside one running server process, not across instances.
 
 No additional stories or Part C work are included. The production security specification remains the reference; unmet requirements must remain visible in the README audit.

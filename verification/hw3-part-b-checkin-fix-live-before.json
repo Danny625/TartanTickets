@@ -1,0 +1,31 @@
+{
+  "url": "https://tartan-tickets-five.vercel.app",
+  "phase": "before fix",
+  "observedAt": "2026-10-22T23:06:11.491Z",
+  "attempts": [
+    {
+      "getStatus": 200,
+      "sampleName": "Sample Alex",
+      "sampleStatusShown": "valid",
+      "tokenCatalogFingerprint": "e88056d43d0f6fc0",
+      "postStatus": 200,
+      "message": "Checked in"
+    },
+    {
+      "getStatus": 200,
+      "sampleName": "Sample Alex",
+      "sampleStatusShown": "used",
+      "tokenCatalogFingerprint": "e88056d43d0f6fc0",
+      "postStatus": 409,
+      "message": "Already used"
+    },
+    {
+      "getStatus": 200,
+      "sampleName": "Sample Alex",
+      "sampleStatusShown": "used",
+      "tokenCatalogFingerprint": "e88056d43d0f6fc0",
+      "postStatus": 409,
+      "message": "Already used"
+    }
+  ]
+}

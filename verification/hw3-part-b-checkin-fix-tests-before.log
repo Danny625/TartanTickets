@@ -1,0 +1,140 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.781417ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.077042ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.440209ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.061ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.056708ms)
+✔ Story 1: free events and the last available seat have clear labels (0.039542ms)
+✔ Story 1: no upcoming events produces an empty list (0.033917ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.074167ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (9.985708ms)
+✖ Story 6 regression: separate route module loads share the same process store (12.42125ms)
+✖ Story 6 regression: a token returned by GET is recognized in an independent POST runtime (36.026666ms)
+✖ Story 6 regression: explicit public seed identities stay stable but mutable state remains independent (0.219042ms)
+✖ Story 6 regression: malformed or duplicate explicit seeds are refused (0.403458ms)
+✔ Story 6: story6_valid_scan_marks_ticket_used (1.218917ms)
+✔ Story 6: story6_duplicate_scan_rejected (0.121709ms)
+✔ Story 6: story6_invalid_scan_rejected_without_mutation (0.66525ms)
+✔ Story 6: story6_concurrent_scans_single_checkin (SEC-14, one process) (0.654917ms)
+✔ Story 6: story6_tokens_random_and_pii_free (token portion of SEC-13) (86.653458ms)
+✔ Story 6: story6_validation_rejects_missing_or_oversized_inputs (0.153ms)
+✔ Story 6: story6_sample_records_are_copies_and_restart_reseeds (0.068417ms)
+✔ Story 6: story6_seeded_used_ticket_is_rejected (0.045458ms)
+✔ Story 6: story6_api_valid_duplicate_invalid_and_no_cache (8.109959ms)
+✔ Story 6: story6_api_malformed_json_and_missing_name_rejected (0.305375ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 19
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 159.26775
+
+✖ failing tests:
+
+test at tests/story-6-store-regression.test.mjs:33:1
+✖ Story 6 regression: separate route module loads share the same process store (12.42125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'a46d391c810e5cd4a36aa41095698afc',
+  +   '39786b29eb47c0f0086ed078f2a3471b',
+  +   '3c39b873b3e87a44933d1e3934a6f196',
+  +   'f6a71b8090e4c8671747153a576c213d'
+  -   'be37004609c8567f1a51885ca940c171',
+  -   '599e1c26b2568f0d92ea288bc559a7c7',
+  -   'b2f465b141b45c2a0ce9a0e8998cec47',
+  -   'ee2a5455fc64e8b98a0d7fee30eda318'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/story-6-store-regression.test.mjs:40:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'a46d391c810e5cd4a36aa41095698afc', '39786b29eb47c0f0086ed078f2a3471b', '3c39b873b3e87a44933d1e3934a6f196', 'f6a71b8090e4c8671747153a576c213d' ],
+    expected: [ 'be37004609c8567f1a51885ca940c171', '599e1c26b2568f0d92ea288bc559a7c7', 'b2f465b141b45c2a0ce9a0e8998cec47', 'ee2a5455fc64e8b98a0d7fee30eda318' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/story-6-store-regression.test.mjs:53:1
+✖ Story 6 regression: a token returned by GET is recognized in an independent POST runtime (36.026666ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'c25dc65341d30b4fafa6204448fb94fb',
+  +   'da85118e396e07c3557c4a3dae205569',
+  +   '2497b527798781ad26fb73401a8f36c1',
+  +   '34a37e32d89c18276cc00cbe460c2f88'
+  -   'abddde44da1e16ac890913fec8d7a461',
+  -   '86b240c88b3cc6ab00e23ce2c01c0a21',
+  -   'b71013cb1972705b98a77c8c9f1a5f24',
+  -   '820987967839ff4aea5f587cb87b89f2'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/story-6-store-regression.test.mjs:57:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'c25dc65341d30b4fafa6204448fb94fb', 'da85118e396e07c3557c4a3dae205569', '2497b527798781ad26fb73401a8f36c1', '34a37e32d89c18276cc00cbe460c2f88' ],
+    expected: [ 'abddde44da1e16ac890913fec8d7a461', '86b240c88b3cc6ab00e23ce2c01c0a21', 'b71013cb1972705b98a77c8c9f1a5f24', '820987967839ff4aea5f587cb87b89f2' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/story-6-store-regression.test.mjs:71:1
+✖ Story 6 regression: explicit public seed identities stay stable but mutable state remains independent (0.219042ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   '45e94ad9d094ef58bfb999cf1e34047f',
+  +   'eb03bf856af4e8b38e70f2667cd78e2a',
+  +   '11398e67a05ba055b96980abd604b50e',
+  +   'c4eb9ca7a34dea823481c399c49e35b7'
+  -   'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  -   'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  -   'cccccccccccccccccccccccccccccccc',
+  -   'dddddddddddddddddddddddddddddddd'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/story-6-store-regression.test.mjs:75:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '45e94ad9d094ef58bfb999cf1e34047f', 'eb03bf856af4e8b38e70f2667cd78e2a', '11398e67a05ba055b96980abd604b50e', 'c4eb9ca7a34dea823481c399c49e35b7' ],
+    expected: [ 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'cccccccccccccccccccccccccccccccc', 'dddddddddddddddddddddddddddddddd' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/story-6-store-regression.test.mjs:83:1
+✖ Story 6 regression: malformed or duplicate explicit seeds are refused (0.403458ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/story-6-store-regression.test.mjs:85:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+Exit status: 1

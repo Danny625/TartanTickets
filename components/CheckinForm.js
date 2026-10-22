@@ -87,7 +87,7 @@ export default function CheckinForm() {
         <div><strong>{ticket.attendeeName}</strong><span>{ticket.status === 'used' ? 'Already used' : 'Unused sample'}</span></div>
         <code>{ticket.token}</code>
       </li>)}</ul>)}
-      <p className="sample-help">If an unused sample returns “Invalid ticket,” the request may have reached another server instance. This demo cannot synchronize instances. Use the local single-process server for repeatable duplicate checks.</p>
+      <p className="sample-help">Public sample tokens are recognized across instances, but used-ticket state is not shared. A different instance or restart may accept a previously used sample again. Use the local single-process server for repeatable duplicate checks.</p>
     </section>
   </div>;
 }

@@ -74,3 +74,8 @@ The original REQ IDs above do not match the six story numbers in the requirement
 | Every later use is rejected and preserves original timestamp | `story6_duplicate_scan_rejected` |
 
 The same file adds API, validation, invalid-token, seeded-used-token, immutable fixture, random-token, and single-process concurrency checks. `verification/hw3-part-b-browser.mjs` adds post-implementation browser checks, including offline behavior and real concurrent local HTTP submissions. Manual token entry replaces physical QR scanning for the homework scope; the typed name is not authentication. Cross-instance check-in consistency, production authorization, camera scanning, and the complete security suite are not claimed satisfied. See the requirements file's **Scope for HW3**, the README audit, and `HW3_NOTES.md`.
+
+
+### Part B valid-token regression coverage
+
+`tests/story-6-store-regression.test.mjs` adds four tests before the fix: separate route-module loads use one process store; independent GET/POST runtimes recognize the same public fixture tokens; explicit fixture identities do not synchronize mutable state; malformed/duplicate seed identities are rejected. The original Story 1 and Story 6 tests remain unchanged. These tests do not claim cross-instance duplicate prevention. The original user-observed live failure and subsequent verification are recorded separately in `HW3_NOTES.md`.

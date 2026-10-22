@@ -104,7 +104,7 @@ This audits every requirement in `docs/Starter Spec A - Tartan Tickets - SECURIT
 | SEC-10 — Process Stripe event IDs at most once | not satisfied | No Stripe events, idempotency storage, ticket issuance, or refunds. |
 | SEC-11 — Stripe keys in secrets manager, never source; live keys only in production | partly satisfied | No keys or environment files are required or included; `.gitignore` excludes `.env*` except `.env.example`. No secrets manager or production key policy is implemented. |
 | SEC-12 — Two approvals for connected Stripe account changes | not satisfied | No connected accounts, roles, payout changes, or approval workflow. |
-| SEC-13 — Random, PII-free QR tokens of at least 128 bits | partly satisfied | Sample tokens use 16 cryptographically random bytes (128 bits), contain no PII, and are looked up on the server. The 100,000-token uniqueness/format test passes. No QR images are encoded or scanned; manual entry and public sample tokens are demo-only. |
+| SEC-13 — Random, PII-free QR tokens of at least 128 bits | partly satisfied | Live sample token identities are four public fixtures generated once from 16 random bytes (128 bits), with no PII; every instance recognizes the same catalog. The factory still supports random per-store tokens and its 100,000-token test passes. No QR images are encoded/scanned, and public fixtures provide no secrecy or authorization. |
 | SEC-14 — Atomic check-in on simultaneous scans | partly satisfied | Check-and-mark is synchronous in one server process; automated unit and 50-request local HTTP checks each produce exactly one success. State is not shared across Vercel instances and resets on restart/deploy, so production exactly-once check-in is not guaranteed. |
 | SEC-15 — Invalid scan limit and officer notification | not satisfied | Manual token check-in exists, but there are no verified accounts, invalid-scan rate limits, five-minute pauses, or officer notifications. |
 | SEC-16 — Checkout hoarding limit | not satisfied | No checkout or per-account rate limiter. |
@@ -129,7 +129,7 @@ Part B adds **Story 6: Check-in** using manual QR-token entry and clearly labele
 
 - **Simulated payments only:** no real payments or card collection; check-in has no payment flow.
 - **Typed names instead of authentication:** the officer name is a demo label, not verified identity or officer/club authorization. Use a fictional demo name.
-- **Server-memory storage only:** state and sample tokens reset on restart/deploy and are not shared across Vercel instances. One-process duplicate prevention is not reliable cross-instance duplicate prevention. Do not use this demo for real admission.
+- **Server-memory storage only:** public sample token identities are fixed demo fixtures; mutable used-ticket state resets on restart/deploy and is not shared across Vercel instances. One-process duplicate prevention is not reliable cross-instance duplicate prevention. Do not use this demo for real admission.
 
 The persistence question and the user's answer are saved in [HW3 homework notes for Part E](docs/HW3_NOTES.md). No Part C work is included.
 
@@ -147,7 +147,7 @@ After implementation, `npm test` completed with **tests 19, pass 19, fail 0, ski
 | One-process simultaneous check-in succeeds exactly once | `story6_concurrent_scans_single_checkin` | Passed |
 | Token portion of SEC-13: random 128-bit PII-free tokens; 100,000 unique samples | `story6_tokens_random_and_pii_free` | Passed |
 | Required typed name and bounded inputs | `story6_validation_rejects_missing_or_oversized_inputs` | Passed |
-| Sample snapshots cannot mutate storage; restart reseeds | `story6_sample_records_are_copies_and_restart_reseeds` | Passed |
+| Factory snapshots cannot mutate storage; default random factory reseeds (deployed catalog is now stable) | `story6_sample_records_are_copies_and_restart_reseeds` | Passed |
 | Seeded used fixture is rejected | `story6_seeded_used_ticket_is_rejected` | Passed |
 | API success, duplicate 409, invalid 404, no caching | `story6_api_valid_duplicate_invalid_and_no_cache` | Passed |
 | API malformed JSON and missing name return 400 | `story6_api_malformed_json_and_missing_name_rejected` | Passed |
@@ -156,7 +156,7 @@ Additional **post-implementation local browser verification**: `node verificatio
 
 ### Localhost click instructions
 
-The updated production app is served at **http://127.0.0.1:3000** while its local server remains running. To restart later, run `npm run build` and `npm start` in this folder. Restarting reseeds the samples; it deliberately loses all previous check-ins.
+The updated production app is served at **http://127.0.0.1:3000** while its local server remains running. To restart later, run `npm run build` and `npm start` in this folder. Restarting clears used-ticket state while retaining the same public sample-token identities; it deliberately loses previous check-ins.
 
 1. Open http://127.0.0.1:3000 and click **Demo check-in**, or open http://127.0.0.1:3000/checkin directly.
 2. Enter **Demo Officer** in **Officer name (demo label)**.
@@ -167,17 +167,17 @@ The updated production app is served at **http://127.0.0.1:3000** while its loca
 
 The fourth seed, **Sample Drew**, starts used and can demonstrate a rejection without consuming another sample. This demo has no reset endpoint or ticket-creation workflow; restart the local server to restore fresh samples.
 
-### Three manual checks for the live Vercel site — not yet run by the user
+### Three manual checks for the live Vercel site — observed results
 
-After Vercel deploys the pushed commit, use your live site's `/checkin` page. Record **actual observed results and pass/fail yourself**; no live manual outcome is asserted here.
+After Vercel deploys the pushed commit, use your live site's `/checkin` page. Record **actual observed results and pass/fail yourself**. The user reported the first failure below; the other manual outcomes remain unreported.
 
 | # | Manual action | Expected result | Actual result |
 |---|---|---|---|
-| 1 | Enter **Demo Officer**, copy a currently unused sample token from the live page, and submit it. | **Checked in**, matching fictional attendee, and check-in timestamp. | Not yet run |
+| 1 | Enter **Demo Officer**, copy a currently unused sample token from the live page, and submit it. | **Checked in**, matching fictional attendee, and check-in timestamp. | **Failed on f68a4b6:** user submitted the exact unused Sample Alex token with Demo Officer; server returned **Invalid ticket**. |
 | 2 | Immediately submit the same token again. | Required rejection: **Already used**, with the original timestamp, when both requests reach the same instance. | Not yet run |
 | 3 | Submit **not-a-real-ticket** with the demo name entered. | Required rejection: **Invalid ticket**, with no admission confirmation. | Not yet run |
 
-If a valid live sample returns **Invalid ticket**, or a repeat is accepted after a restart/instance change, record what happened accurately as the acknowledged memory-only limitation. Do not claim the live duplicate check passed. Localhost is the repeatable single-process acceptance environment.
+The user's valid-token rejection is preserved as a real failure; it is not treated as acceptable completion. The follow-up fix uses a process-wide store and stable public fixture identities so a different instance can recognize a shown token. A repeated token can still be accepted after a restart/instance change because mutable state is not shared. Record any such outcome accurately and do not claim the live duplicate check passed. Localhost remains the repeatable single-process acceptance environment.
 
 ### Exactly what to screenshot
 
@@ -196,3 +196,20 @@ Take separate screenshots:
 3. **Build:** **Compiled successfully in 372ms**, the route list including **/checkin** and **/api/checkin**, and **Exit status: 0**.
 
 Optional extra evidence: `cat verification/hw3-part-b-browser.log` shows **11 passed, 0 failed** and the 50-request local concurrency result. Local browser screenshots are [desktop](verification/hw3-part-b-desktop.png) and [mobile](verification/hw3-part-b-mobile.png). Their visible sample tokens are public fictional fixtures, not credentials.
+
+## Part B follow-up: live valid-token rejection
+
+**User-observed failure on f68a4b6:** the exact unused Sample Alex token, submitted with Demo Officer, returned **Invalid ticket**. The original live-check result above remains failed. [Homework notes](docs/HW3_NOTES.md) preserve the report, investigation, and persistence decision.
+
+GET and POST originally shared a lexical store in one route module; separate module evaluations or processes nevertheless created different stores and random catalogs. Loading the route independently twice reproduced **GET 200 (unused Sample Alex) → POST 404 Invalid ticket** locally. An initial live probe reached a warm store and succeeded, so the original deployment's exact instance routing has not been proved.
+
+The fix shares the mutable store via a process-wide symbol and uses four stable, public random sample-token fixtures across runtimes. Their identities are intentionally in source, not secrets. The state remains memory-only: **no database, no authentication, no reliable duplicate prevention across instances**. The default factory's random-token tests are unchanged. New isolated-runtime tests prove both token recognition and the continuing lack of shared used state.
+
+Regression evidence:
+- [Pre-fix tests](verification/hw3-part-b-checkin-fix-tests-before.log): **19 pass, 4 fail, exit 1**.
+- [Post-fix tests](verification/hw3-part-b-checkin-fix-tests-after.log): **23 pass, 0 fail, skipped 0, exit 0**.
+- [Independent-module reproduction](verification/hw3-part-b-checkin-fix-reproduction.json).
+- [Initial live probe](verification/hw3-part-b-checkin-fix-live-before.json): did not reproduce the user's intermittent failure.
+- [Follow-up build](verification/hw3-part-b-checkin-fix-build.log).
+
+**Live verification of the fix is pending.** It will be recorded separately after deployment. `X-Demo-Store-Id` identifies a runtime store for diagnosis; `X-Demo-Fixture-Version: hw3-v2` distinguishes the fixed catalog. These headers are diagnostic, not authorization. Original Part B logs remain historical evidence and are not overwritten.
