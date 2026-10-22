@@ -1,0 +1,17 @@
+PASS Story 1: all three cards display dates, locations, prices and remaining seats
+PASS Story 1: sold-out card replaces Buy with Join waitlist; past event is hidden
+PASS Browse link moves to the events section
+PASS Hydrated Buy and Join waitlist controls explain deferred stories without creating transactions
+PASS Refresh shows loading, disables the refresh button, and announces success
+PASS Failed refresh preserves cards; Try again recovers
+PASS Empty API response displays No upcoming events yet.
+PASS SEC-20: injected event description displays as text and does not create executable HTML
+file:///Users/Danny1/Desktop/business%20ai/TartanTickets/verification/browser-check.mjs:58
+    throw new Error(`Timed out: ${expression}`);
+          ^
+
+Error: Timed out: document.querySelector('.refresh-button').disabled && document.querySelector('.status-line').textContent.includes('Loading')
+    at waitFor (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/verification/browser-check.mjs:58:11)
+    at async file:///Users/Danny1/Desktop/business%20ai/TartanTickets/verification/browser-check.mjs:144:3
+
+Node.js v26.12.1

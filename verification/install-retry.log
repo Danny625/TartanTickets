@@ -1,0 +1,15 @@
+Installation retry after user authorization.
+
+Command: curl --fail --location --connect-timeout 10 --max-time 20 https://nodejs.org/dist/index.json --output /private/tmp/tartan-node-releases.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: nodejs.org
+Exit: 6
+
+Command: curl --head --connect-timeout 10 --max-time 20 https://registry.npmjs.org/next
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: registry.npmjs.org
+Exit: 6

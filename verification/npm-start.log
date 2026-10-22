@@ -1,0 +1,11 @@
+npm notice run tartan-tickets@0.1.0 start
+npm notice run next start --hostname 127.0.0.1
+⨯ Failed to start server
+Error: listen EPERM: operation not permitted 127.0.0.1:3000
+    at ignore-listed frames {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '127.0.0.1',
+  port: 3000
+}

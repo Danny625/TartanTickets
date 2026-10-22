@@ -1,0 +1,20 @@
+[1022/174012.421081:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+[1022/174012.471533:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.459958ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.063083ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.26975ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.056ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.047333ms)
+✔ Story 1: free events and the last available seat have clear labels (0.033125ms)
+✔ Story 1: no upcoming events produces an empty list (0.027625ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.054042ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (7.295291ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.18975
+test exit: 0

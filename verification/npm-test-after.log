@@ -1,0 +1,19 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.989583ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.075708ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.491541ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.059667ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.057125ms)
+✔ Story 1: free events and the last available seat have clear labels (0.037958ms)
+✔ Story 1: no upcoming events produces an empty list (0.034833ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.073208ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (17.78ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.722667

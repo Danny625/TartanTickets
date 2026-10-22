@@ -1,0 +1,38 @@
+[1022/173724.882219:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+[1022/173724.989921:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+node:internal/modules/esm/resolve:276
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/Danny1/Desktop/business ai/TartanTickets/lib/events.mjs' imported from /Users/Danny1/Desktop/business ai/TartanTickets/tests/story-1.test.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:276:11)
+    at moduleResolve (node:internal/modules/esm/resolve:892:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1019:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:381:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/Danny1/Desktop/business%20ai/TartanTickets/lib/events.mjs'
+}
+
+Node.js v24.21.0
+✖ tests/story-1.test.mjs (48.786666ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.546833
+
+✖ failing tests:
+
+test at tests/story-1.test.mjs:1:1
+✖ tests/story-1.test.mjs (48.786666ms)
+  'test failed'
+test exit: 1

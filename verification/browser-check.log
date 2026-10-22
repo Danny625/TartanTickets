@@ -1,0 +1,12 @@
+PASS Story 1: all three cards display dates, locations, prices and remaining seats
+PASS Story 1: sold-out card replaces Buy with Join waitlist; past event is hidden
+PASS Browse link moves to the events section
+PASS Hydrated Buy and Join waitlist controls explain deferred stories without creating transactions
+PASS Refresh shows loading, disables the refresh button, and announces success
+PASS Failed refresh preserves cards; Try again recovers
+PASS Empty API response displays No upcoming events yet.
+PASS SEC-20: injected event description displays as text and does not create executable HTML
+PASS Refresh control supports keyboard Enter activation
+PASS 390px viewport uses a single column without horizontal overflow; desktop and mobile screenshots saved
+PASS No uncaught browser exceptions
+Browser checks: 11 passed, 0 failed
