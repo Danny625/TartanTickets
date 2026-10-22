@@ -23,7 +23,7 @@ User observation, preserved verbatim:
 Live-check 1 result: **Failed**. This is the user's actual observation, not an inferred pass. The duplicate and unknown-token live checks have not been reported by the user. Investigation and any later automated verification must be recorded separately; do not erase this failure or claim a fix before verification.
 
 
-### Investigation and fix (verification pending)
+### Investigation and fix
 
 Source inspection found one route-level `const store = createCheckinStore()` shared lexically by GET and POST. There were not two explicit store declarations. However, each independently evaluated route module/process called the factory again and generated unrelated random sample tokens. A local reproduction loaded the route twice with independent module-cache identities: GET showed unused Sample Alex, and POST in the other module returned **404 Invalid ticket** for that exact token. See `verification/hw3-part-b-checkin-fix-reproduction.json`.
 
@@ -42,3 +42,19 @@ Live fix verification remains pending at this point. Preserve this entry and app
 Reference: [Vercel Functions lifecycle](https://vercel.com/docs/functions#how-the-vercel-functions-lifecycle-works) describes request invocations, instance reuse, scaling, and scale-to-zero. Reuse does not establish shared state across independent runtimes.
 
 Local follow-up verification before deployment: `npm run build` passed (**Compiled successfully in 234ms**, exit 0). All **11** original local Story 6 browser checks passed on the new build, including the same-process 50-request concurrency test. Separate follow-up logs/screenshots preserve the original Part B evidence. None of these local results is a live fix claim.
+
+
+### Actual deployed fix verification — automated, separate from user manual results
+
+Fix commit: `e8931f8` (stable public fixture identities and process-wide store). On **2026-10-22 at 23:11 UTC**, automated headless Chrome opened **https://tartan-tickets-five.vercel.app/checkin**, loaded the real page, typed **Demo Officer**, copied the exact unused **Sample Alex** token displayed in that page, and submitted the form.
+
+Observed results:
+1. First submission: **HTTP 200 / Checked in**, **Sample Alex**, timestamp `2026-10-22T23:11:44.600Z`.
+2. Immediate repeat: **HTTP 409 / Already used**, original timestamp preserved.
+3. `not-a-real-ticket`: **HTTP 404 / Invalid ticket**.
+
+Three live GET probes served a stable `hw3-v2` catalog. One distinct store ID was observed in those probes and the tested submissions; no live cross-instance duplicate guarantee was tested or inferred. The independent-runtime regression tests separately prove token recognition across newly initialized stores, and deliberately demonstrate that used-state is not synchronized. Five deployed-browser checks passed, exit 0, with no uncaught exceptions.
+
+Evidence: `verification/hw3-part-b-checkin-fix-live-browser.log`, `verification/hw3-part-b-checkin-fix-live-after.json`, and `verification/hw3-part-b-checkin-fix-live.png`.
+
+The initial **user manual check remains recorded as failed on f68a4b6**. The user has not reported a manual retest of the fix. This automated deployed verification confirms the repaired displayed-token flow on the observed deployment; it is not a claim of durable storage, officer authentication, or distributed duplicate prevention. Reload `/checkin` before copying a token so an old browser tab does not retain the pre-fix random catalog.

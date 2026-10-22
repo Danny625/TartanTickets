@@ -1,0 +1,45 @@
+PASS Live deployment serves hw3-v2 and a stable sample catalog across three GET requests
+PASS Live browser: exact displayed unused Sample Alex token is accepted with attendee and timestamp
+PASS Live browser: repeat rejected with Already used and original timestamp
+PASS Live browser: genuinely unknown token rejected with Invalid ticket
+PASS No uncaught browser exceptions during live verification
+{
+  "url": "https://tartan-tickets-five.vercel.app",
+  "checkedAt": "2026-10-22T23:11:42.922Z",
+  "automated": true,
+  "checks": [
+    {
+      "action": "Enter the exact unused token displayed on the live page with Demo Officer",
+      "sampleName": "Sample Alex",
+      "status": 200,
+      "outcome": "Checked in",
+      "timestamp": "2026-10-22T23:11:44.600Z",
+      "storeId": "01709f15e9144822",
+      "result": "Passed"
+    },
+    {
+      "action": "Submit the same token again",
+      "status": 409,
+      "outcome": "Already used",
+      "timestampPreserved": true,
+      "storeId": "01709f15e9144822",
+      "result": "Passed on observed runtime"
+    },
+    {
+      "action": "Submit not-a-real-ticket",
+      "status": 404,
+      "outcome": "Invalid ticket",
+      "storeId": "01709f15e9144822",
+      "result": "Passed"
+    }
+  ],
+  "catalog": {
+    "fixtureVersion": "hw3-v2",
+    "stableAcrossThreeGets": true,
+    "distinctStoreIdsObserved": 1
+  },
+  "limitations": "This is automated deployed-browser evidence, not the user manual retest. No database or cross-instance duplicate guarantee."
+}
+Deployed browser verification: 5 checks passed; any distributed duplicate limitation is recorded separately.
+
+Exit status: 0

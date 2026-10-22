@@ -1,0 +1,37 @@
+{
+  "url": "https://tartan-tickets-five.vercel.app",
+  "checkedAt": "2026-10-22T23:11:42.922Z",
+  "automated": true,
+  "checks": [
+    {
+      "action": "Enter the exact unused token displayed on the live page with Demo Officer",
+      "sampleName": "Sample Alex",
+      "status": 200,
+      "outcome": "Checked in",
+      "timestamp": "2026-10-22T23:11:44.600Z",
+      "storeId": "01709f15e9144822",
+      "result": "Passed"
+    },
+    {
+      "action": "Submit the same token again",
+      "status": 409,
+      "outcome": "Already used",
+      "timestampPreserved": true,
+      "storeId": "01709f15e9144822",
+      "result": "Passed on observed runtime"
+    },
+    {
+      "action": "Submit not-a-real-ticket",
+      "status": 404,
+      "outcome": "Invalid ticket",
+      "storeId": "01709f15e9144822",
+      "result": "Passed"
+    }
+  ],
+  "catalog": {
+    "fixtureVersion": "hw3-v2",
+    "stableAcrossThreeGets": true,
+    "distinctStoreIdsObserved": 1
+  },
+  "limitations": "This is automated deployed-browser evidence, not the user manual retest. No database or cross-instance duplicate guarantee."
+}
