@@ -1,0 +1,8 @@
+PASS Real HTTP: 2,049-byte valid-token request returns 413 and leaves ticket state unchanged
+PASS Real HTTP streamed request without Content-Length: 2,049 bytes returns 413 without mutation
+PASS Real HTTP: exactly 2,048 bytes reaches normal check-in and returns 200
+PASS Real HTTP: 2,047-byte JSON reaches normal unknown-token validation (404)
+PASS Real HTTP: multibyte payload exceeding 2,048 bytes is rejected even below 2,048 characters
+Part C HTTP checks: 5 passed, 0 failed
+
+Exit status: 0

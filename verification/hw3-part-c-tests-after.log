@@ -1,0 +1,47 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✔ SEC-23: oversized_request_returns_413_without_changing_ticket_state (11.92275ms)
+✔ SEC-23: body_at_exactly_2048_bytes_can_check_in_a_valid_ticket (0.345375ms)
+✔ SEC-23: body_at_2047_bytes_reaches_normal_validation (0.219375ms)
+✔ SEC-23: body_at_2049_bytes_is_rejected (0.157875ms)
+✔ SEC-23: streamed_body_without_content_length_stops_and_cancels_at_overflow (0.70275ms)
+✔ SEC-23: falsely_small_content_length_cannot_bypass_actual_byte_limit (0.142083ms)
+✔ SEC-23: a_single_large_stream_chunk_is_rejected_and_cancelled (0.107125ms)
+✔ SEC-23: UTF8_byte_count_rejects_multibyte_body_under_2048_characters (0.113042ms)
+✔ SEC-23: exact_limit_UTF8_json_split_inside_a_multibyte_character_still_parses (0.177708ms)
+✔ SEC-23: oversized_malformed_json_returns_413_before_JSON_parsing (0.141083ms)
+✔ SEC-23: within_limit_malformed_JSON_and_empty_body_still_return_400 (0.238834ms)
+✔ SEC-23: stream_read_failure_returns_400_without_changing_ticket_state (0.217833ms)
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.89275ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.085042ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.393417ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.079916ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.066875ms)
+✔ Story 1: free events and the last available seat have clear labels (0.039666ms)
+✔ Story 1: no upcoming events produces an empty list (0.039458ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.075666ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (10.565791ms)
+✔ Story 6 regression: separate route module loads share the same process store (11.988125ms)
+✔ Story 6 regression: a token returned by GET is recognized in an independent POST runtime (90.992875ms)
+✔ Story 6 regression: explicit public seed identities stay stable but mutable state remains independent (0.184875ms)
+✔ Story 6 regression: malformed or duplicate explicit seeds are refused (0.093209ms)
+✔ Story 6: story6_valid_scan_marks_ticket_used (1.679125ms)
+✔ Story 6: story6_duplicate_scan_rejected (0.095542ms)
+✔ Story 6: story6_invalid_scan_rejected_without_mutation (0.281875ms)
+✔ Story 6: story6_concurrent_scans_single_checkin (SEC-14, one process) (0.610125ms)
+✔ Story 6: story6_tokens_random_and_pii_free (token portion of SEC-13) (92.227375ms)
+✔ Story 6: story6_validation_rejects_missing_or_oversized_inputs (0.143375ms)
+✔ Story 6: story6_sample_records_are_copies_and_restart_reseeds (0.072917ms)
+✔ Story 6: story6_seeded_used_ticket_is_rejected (0.046833ms)
+✔ Story 6: story6_api_valid_duplicate_invalid_and_no_cache (9.451ms)
+✔ Story 6: story6_api_malformed_json_and_missing_name_rejected (0.331958ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 162.477625
+
+Exit status: 0

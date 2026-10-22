@@ -1,0 +1,184 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✖ SEC-23: oversized_request_returns_413_without_changing_ticket_state (21.952917ms)
+✔ SEC-23: body_at_exactly_2048_bytes_can_check_in_a_valid_ticket (0.593917ms)
+✔ SEC-23: body_at_2047_bytes_reaches_normal_validation (0.506125ms)
+✖ SEC-23: body_at_2049_bytes_is_rejected (0.356917ms)
+✖ SEC-23: streamed_body_without_content_length_stops_and_cancels_at_overflow (1.0505ms)
+✖ SEC-23: falsely_small_content_length_cannot_bypass_actual_byte_limit (0.167958ms)
+✖ SEC-23: a_single_large_stream_chunk_is_rejected_and_cancelled (0.157958ms)
+✖ SEC-23: UTF8_byte_count_rejects_multibyte_body_under_2048_characters (0.113208ms)
+✔ SEC-23: exact_limit_UTF8_json_split_inside_a_multibyte_character_still_parses (0.1515ms)
+✖ SEC-23: oversized_malformed_json_returns_413_before_JSON_parsing (0.156667ms)
+✔ SEC-23: within_limit_malformed_JSON_and_empty_body_still_return_400 (0.147667ms)
+✔ SEC-23: stream_read_failure_returns_400_without_changing_ticket_state (0.189084ms)
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.8385ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.082583ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.608958ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.069208ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.064458ms)
+✔ Story 1: free events and the last available seat have clear labels (0.040583ms)
+✔ Story 1: no upcoming events produces an empty list (0.038791ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.077084ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (9.31025ms)
+✔ Story 6 regression: separate route module loads share the same process store (21.651958ms)
+✔ Story 6 regression: a token returned by GET is recognized in an independent POST runtime (87.862958ms)
+✔ Story 6 regression: explicit public seed identities stay stable but mutable state remains independent (0.182208ms)
+✔ Story 6 regression: malformed or duplicate explicit seeds are refused (0.104041ms)
+✔ Story 6: story6_valid_scan_marks_ticket_used (3.330833ms)
+✔ Story 6: story6_duplicate_scan_rejected (0.108584ms)
+✔ Story 6: story6_invalid_scan_rejected_without_mutation (0.580625ms)
+✔ Story 6: story6_concurrent_scans_single_checkin (SEC-14, one process) (0.563333ms)
+✔ Story 6: story6_tokens_random_and_pii_free (token portion of SEC-13) (92.896458ms)
+✔ Story 6: story6_validation_rejects_missing_or_oversized_inputs (0.135625ms)
+✔ Story 6: story6_sample_records_are_copies_and_restart_reseeds (0.070708ms)
+✔ Story 6: story6_seeded_used_ticket_is_rejected (0.049334ms)
+✔ Story 6: story6_api_valid_duplicate_invalid_and_no_cache (8.407458ms)
+✔ Story 6: story6_api_malformed_json_and_missing_name_rejected (0.371083ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 28
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 170.891083
+
+✖ failing tests:
+
+test at tests/sec-23-request-body-limit.test.mjs:38:1
+✖ SEC-23: oversized_request_returns_413_without_changing_ticket_state (21.952917ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   status: 200,
+  +   ticketStateUnchanged: false,
+  +   unboundedJsonCalls: 1
+  -   status: 413,
+  -   ticketStateUnchanged: true,
+  -   unboundedJsonCalls: 0
+    }
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:48:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 200, ticketStateUnchanged: false, unboundedJsonCalls: 1 },
+    expected: { status: 413, ticketStateUnchanged: true, unboundedJsonCalls: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:71:1
+✖ SEC-23: body_at_2049_bytes_is_rejected (0.356917ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:72:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:75:1
+✖ SEC-23: streamed_body_without_content_length_stops_and_cancels_at_overflow (1.0505ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   cancelled: false,
+  +   pulls: 5,
+  +   status: 400
+  -   cancelled: true,
+  -   pulls: 3,
+  -   status: 413
+    }
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:86:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 400, pulls: 5, cancelled: false },
+    expected: { status: 413, pulls: 3, cancelled: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:91:1
+✖ SEC-23: falsely_small_content_length_cannot_bypass_actual_byte_limit (0.167958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:93:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:96:1
+✖ SEC-23: a_single_large_stream_chunk_is_rejected_and_cancelled (0.157958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:99:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:104:1
+✖ SEC-23: UTF8_byte_count_rejects_multibyte_body_under_2048_characters (0.113208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:108:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sec-23-request-body-limit.test.mjs:120:1
+✖ SEC-23: oversized_malformed_json_returns_413_before_JSON_parsing (0.156667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  400 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/Danny1/Desktop/business%20ai/TartanTickets/tests/sec-23-request-body-limit.test.mjs:121:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+Exit status: 1

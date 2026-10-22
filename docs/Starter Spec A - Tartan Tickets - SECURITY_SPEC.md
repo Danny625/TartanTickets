@@ -41,3 +41,8 @@ All requirements use EARS syntax. Assumption IDs (A1–A12) refer to the list in
 
 - **SEC-21** When a role change, refund, event cancellation, Stripe account change, or attendee export occurs, the system shall write an audit log entry recording who did it, what changed, and when.
 - **SEC-22** The system shall keep audit logs append-only, readable only by platform admins, for one year.
+
+
+## Request resource limits (HW3 Part C)
+
+- **SEC-23** WHEN a POST request to `/api/checkin` exceeds 2,048 body bytes, THE system SHALL stop reading the body, return HTTP 413, and neither parse the body as JSON nor change ticket state.

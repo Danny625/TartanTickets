@@ -63,6 +63,7 @@ Every requirement in `requirements.md` and `SECURITY_SPEC.md` maps to at least o
 | SEC-20 | test_event_text_rendered_as_plain_text | E2E | A script tag in an event description displays as text. |
 | SEC-21 | test_sensitive_actions_write_audit_log | Integration | Each listed action creates a complete log entry. |
 | SEC-22 | test_audit_log_append_only_admin_read | Integration | Edits and deletes fail; non-admins cannot read. |
+| SEC-23 | oversized_request_returns_413_without_changing_ticket_state | Integration (route + memory store) | A 2,049-byte request returns 413 without JSON parsing or ticket mutation. Additional tests cover exact byte boundaries, UTF-8, chunked bodies, cancellation, and misleading Content-Length. |
 
 ## HW3 Part B — scoped Story 6 mapping
 

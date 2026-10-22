@@ -114,6 +114,7 @@ This audits every requirement in `docs/Starter Spec A - Tartan Tickets - SECURIT
 | SEC-20 — Officer-entered event text displayed as plain text | fully satisfied | All event titles, descriptions, clubs, and locations render through React text interpolation; no HTML injection API is used. No officer editing is offered. A browser check confirmed an injected HTML event description appeared literally, created no image element, and executed no handler. |
 | SEC-21 — Actor, change, timestamp audit log for sensitive actions | not satisfied | No listed sensitive actions or audit logger are implemented. |
 | SEC-22 — Append-only, admin-only logs retained for a year | not satisfied | No audit-log storage, access control, immutability, or retention. |
+| SEC-23 — Limit check-in request body to 2,048 bytes | fully satisfied | POST /api/checkin counts actual stream bytes, buffers at most 2,048 bytes, cancels on overflow, and returns 413 before JSON parsing or ticket mutation. Boundary, UTF-8, streamed, misleading Content-Length, cancellation, and unchanged-state tests pass. |
 
 Additional requirements-file security gaps: no per-user 100-request/minute limiter, IDOR protection, webhook security tests, or concurrent-buyer test exists. They remain outside the homework implementation; invalid-scan throttling for check-in is also unimplemented. The app does set `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and a restrictive referrer policy in Next.js configuration; their delivery was confirmed on both the page and API responses. These headers do not satisfy HTTPS, authentication, or authorization requirements.
 
@@ -131,7 +132,7 @@ Part B adds **Story 6: Check-in** using manual QR-token entry and clearly labele
 - **Typed names instead of authentication:** the officer name is a demo label, not verified identity or officer/club authorization. Use a fictional demo name.
 - **Server-memory storage only:** public sample token identities are fixed demo fixtures; mutable used-ticket state resets on restart/deploy and is not shared across Vercel instances. One-process duplicate prevention is not reliable cross-instance duplicate prevention. Do not use this demo for real admission.
 
-The persistence question and the user's answer are saved in [HW3 homework notes for Part E](docs/HW3_NOTES.md). No Part C work is included.
+The persistence question and the user's answer are saved in [HW3 homework notes for Part E](docs/HW3_NOTES.md). Part C adds only SEC-23 request-size enforcement; no Part D or Part E work is included.
 
 ## HW3 Part B results and acceptance tests
 
@@ -169,15 +170,15 @@ The fourth seed, **Sample Drew**, starts used and can demonstrate a rejection wi
 
 ### Three manual checks for the live Vercel site — observed results
 
-After Vercel deploys the pushed commit, use your live site's `/checkin` page. Record **actual observed results and pass/fail yourself**. The user reported the first failure below; the other manual outcomes remain unreported.
+After Vercel deploys the pushed commit, use your live site's `/checkin` page. Record **actual observed results and pass/fail yourself**. The user has now reported all three manual retests passed after the fix. The original failure remains recorded in the first row and in the homework notes.
 
 | # | Manual action | Expected result | Actual result |
 |---|---|---|---|
-| 1 | Enter **Demo Officer**, copy a currently unused sample token from the live page, and submit it. | **Checked in**, matching fictional attendee, and check-in timestamp. | **Failed on f68a4b6:** user submitted the exact unused Sample Alex token with Demo Officer; server returned **Invalid ticket**. |
-| 2 | Immediately submit the same token again. | Required rejection: **Already used**, with the original timestamp, when both requests reach the same instance. | Not yet run |
-| 3 | Submit **not-a-real-ticket** with the demo name entered. | Required rejection: **Invalid ticket**, with no admission confirmation. | Not yet run |
+| 1 | Enter **Demo Officer**, copy a currently unused sample token from the live page, and submit it. | **Checked in**, matching fictional attendee, and check-in timestamp. | **Initial failure on f68a4b6:** Invalid ticket for the exact unused Alex token. **User-reported retest after fix: Passed — unused Alex showed Checked in.** |
+| 2 | Immediately submit the same token again. | Required rejection: **Already used**, with the original timestamp, when both requests reach the same instance. | **Passed — user observed Already used with the original timestamp.** |
+| 3 | Submit **not-a-real-ticket** with the demo name entered. | Required rejection: **Invalid ticket**, with no admission confirmation. | **Passed — user observed Invalid ticket for not-a-real-ticket.** |
 
-The user's valid-token rejection is preserved as a real failure; it is not treated as acceptable completion. The follow-up fix uses a process-wide store and stable public fixture identities so a different instance can recognize a shown token. A repeated token can still be accepted after a restart/instance change because mutable state is not shared. Record any such outcome accurately and do not claim the live duplicate check passed. Localhost remains the repeatable single-process acceptance environment.
+The user's valid-token rejection is preserved as a real failure; it is not treated as acceptable completion. The follow-up fix uses a process-wide store and stable public fixture identities so a different instance can recognize a shown token. A repeated token can still be accepted after a restart/instance change because mutable state is not shared. The user's immediate live duplicate retest passed, but it does not establish a cross-instance guarantee. Record any future inconsistency accurately. Localhost remains the repeatable single-process acceptance environment.
 
 ### Exactly what to screenshot
 
@@ -199,7 +200,7 @@ Optional extra evidence: `cat verification/hw3-part-b-browser.log` shows **11 pa
 
 ## Part B follow-up: live valid-token rejection
 
-**User-observed failure on f68a4b6:** the exact unused Sample Alex token, submitted with Demo Officer, returned **Invalid ticket**. The original live-check result above remains failed. [Homework notes](docs/HW3_NOTES.md) preserve the report, investigation, and persistence decision.
+**User-observed failure on f68a4b6:** the exact unused Sample Alex token, submitted with Demo Officer, returned **Invalid ticket**. The original failure remains preserved above alongside the subsequent user-reported passing retest. [Homework notes](docs/HW3_NOTES.md) preserve the report, investigation, and persistence decision.
 
 GET and POST originally shared a lexical store in one route module; separate module evaluations or processes nevertheless created different stores and random catalogs. Loading the route independently twice reproduced **GET 200 (unused Sample Alex) → POST 404 Invalid ticket** locally. An initial live probe reached a warm store and succeeded, so the original deployment's exact instance routing has not been proved.
 
@@ -212,6 +213,23 @@ Regression evidence:
 - [Initial live probe](verification/hw3-part-b-checkin-fix-live-before.json): did not reproduce the user's intermittent failure.
 - [Follow-up build](verification/hw3-part-b-checkin-fix-build.log).
 
-**Live automated verification passed on fix commit `e8931f8` at 2026-10-22 23:11 UTC.** Headless Chrome used the actual deployed form at https://tartan-tickets-five.vercel.app/checkin: exact displayed unused Sample Alex token plus Demo Officer returned **200 Checked in**; immediate repeat returned **409 Already used** with the original timestamp; an unknown token returned **404 Invalid ticket**. Five deployed-browser checks passed, exit 0. The three GET catalog probes and tested submissions observed one store ID; no live cross-instance guarantee is inferred. The original user-reported failure remains recorded above; a user manual retest is still pending. Reload the page before copying a token to discard any pre-fix random catalog retained by an old browser tab.
+**Live automated verification passed on fix commit `e8931f8` at 2026-10-22 23:11 UTC.** Headless Chrome used the actual deployed form at https://tartan-tickets-five.vercel.app/checkin: exact displayed unused Sample Alex token plus Demo Officer returned **200 Checked in**; immediate repeat returned **409 Already used** with the original timestamp; an unknown token returned **404 Invalid ticket**. Five deployed-browser checks passed, exit 0. The three GET catalog probes and tested submissions observed one store ID; no live cross-instance guarantee is inferred. The original failure remains recorded above; the user subsequently reported all three manual live retests passed, recorded separately in the manual-results table and homework notes. Reload the page before copying a token to discard any pre-fix random catalog retained by an old browser tab.
 
 Evidence: [live browser output](verification/hw3-part-b-checkin-fix-live-browser.log), [structured results](verification/hw3-part-b-checkin-fix-live-after.json), and [live screenshot](verification/hw3-part-b-checkin-fix-live.png). Reproduce the automated live check with `node verification/checkin-live-verify.mjs https://tartan-tickets-five.vercel.app` while unused fixtures remain. This consumes sample tickets on the live instance. Independent-runtime regression tests provide separate proof of stable token recognition and the continuing used-state limitation. `X-Demo-Store-Id` identifies a runtime store for diagnosis; `X-Demo-Fixture-Version: hw3-v2` distinguishes the fixed catalog. These headers are diagnostic, not authorization. Original Part B logs remain historical evidence and are not overwritten.
+
+
+## HW3 Part C — SEC-23
+
+SEC-23 was added to the security spec before tests and implementation: a POST /api/checkin body over 2,048 bytes must stop reading and return 413 before JSON parsing or ticket mutation. The original audit row is preserved as **not satisfied** in [before evidence](verification/hw3-part-c-audit-before.md); the current row is **fully satisfied**, preserved in [after evidence](verification/hw3-part-c-audit-after.md).
+
+The handler now counts actual bytes from the request stream, cancels on overflow, buffers at most 2,048 bytes, and parses JSON only after an in-limit read. It does not rely on Content-Length. This closes SEC-23 as scoped to the application handler, not all infrastructure buffering or every denial-of-service risk.
+
+Actual results:
+- Before implementation: **35 tests, 28 passed, 7 failed, exit 1**. The main oversized-request case returned 200 and changed ticket state. [Raw failure](verification/hw3-part-c-tests-before.log).
+- After implementation: **35 tests, 35 passed, 0 failed, skipped 0, exit 0**. Tests cover unchanged state, 2,047/2,048/2,049-byte boundaries, UTF-8, streaming, cancellation, and misleading length headers. [Passing tests](verification/hw3-part-c-tests-after.log).
+- Production build: **Compiled successfully in 216ms**, exit 0. [Build output](verification/hw3-part-c-build.log).
+- Additional real local HTTP checks: **5 passed, 0 failed**, exit 0. [HTTP output](verification/hw3-part-c-http.log).
+
+C-why draft: The server must enforce the limit because a client can bypass the browser and send HTTP requests directly. A model prompt cannot restrict incoming bytes, so the handler must count the body as it reads and reject oversized input before JSON parsing or ticket changes.
+
+See [Part C record](docs/HW3_PART_C.md) for all test names, both audit rows, precise screenshot commands, and scope limits. No Part D or Part E work is included.

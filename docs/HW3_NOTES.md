@@ -20,7 +20,7 @@ Deployment under test: Story 6 commit `f68a4b6` (Vercel check reported successfu
 User observation, preserved verbatim:
 > On the live Vercel /checkin page, I submitted the exact token shown for unused Sample Alex with Demo Officer entered. It returned "Invalid ticket."
 
-Live-check 1 result: **Failed**. This is the user's actual observation, not an inferred pass. The duplicate and unknown-token live checks have not been reported by the user. Investigation and any later automated verification must be recorded separately; do not erase this failure or claim a fix before verification.
+Live-check 1 result: **Failed**. This is the user's actual observation, not an inferred pass. At the time of that initial failure, the duplicate and unknown-token live checks had not yet been reported by the user. Investigation and any later automated verification must be recorded separately; do not erase this failure or claim a fix before verification.
 
 
 ### Investigation and fix
@@ -57,4 +57,18 @@ Three live GET probes served a stable `hw3-v2` catalog. One distinct store ID wa
 
 Evidence: `verification/hw3-part-b-checkin-fix-live-browser.log`, `verification/hw3-part-b-checkin-fix-live-after.json`, and `verification/hw3-part-b-checkin-fix-live.png`.
 
-The initial **user manual check remains recorded as failed on f68a4b6**. The user has not reported a manual retest of the fix. This automated deployed verification confirms the repaired displayed-token flow on the observed deployment; it is not a claim of durable storage, officer authentication, or distributed duplicate prevention. Reload `/checkin` before copying a token so an old browser tab does not retain the pre-fix random catalog.
+The initial **user manual check remains recorded as failed on f68a4b6**. At the time of this automated verification, the user had not yet reported a manual retest of the fix. This automated deployed verification confirms the repaired displayed-token flow on the observed deployment; it is not a claim of durable storage, officer authentication, or distributed duplicate prevention. Reload `/checkin` before copying a token so an old browser tab does not retain the pre-fix random catalog.
+
+
+## Part B manual live retest — user-reported observations
+
+The user subsequently reported, verbatim:
+> My three manual live checks passed: unused Alex token showed Checked in, submitting it again showed Already used with the original timestamp, and not-a-real-ticket showed Invalid ticket.
+
+| Manual check | User-observed result | Outcome |
+|---|---|---|
+| Submit the displayed unused Sample Alex token | Checked in | Passed |
+| Submit the same token again | Already used, with the original timestamp | Passed |
+| Submit not-a-real-ticket | Invalid ticket | Passed |
+
+These are the user's actual manual observations after the fix, recorded separately from the automated deployed browser run. The original failed check on `f68a4b6` remains preserved above. The user did not supply a timestamp or store ID for the retest; none is inferred. The observed duplicate rejection does not establish durable or cross-instance duplicate prevention.
