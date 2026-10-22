@@ -63,3 +63,14 @@ Every requirement in `requirements.md` and `SECURITY_SPEC.md` maps to at least o
 | SEC-20 | test_event_text_rendered_as_plain_text | E2E | A script tag in an event description displays as text. |
 | SEC-21 | test_sensitive_actions_write_audit_log | Integration | Each listed action creates a complete log entry. |
 | SEC-22 | test_audit_log_append_only_admin_read | Integration | Edits and deletes fail; non-admins cannot read. |
+
+## HW3 Part B — scoped Story 6 mapping
+
+The original REQ IDs above do not match the six story numbers in the requirements file. For this assignment, Story 6 is verified by these tests written before implementation in `tests/story-6.test.mjs`:
+
+| Story 6 acceptance behavior | Named test |
+|---|---|
+| Valid token marks ticket used | `story6_valid_scan_marks_ticket_used` |
+| Every later use is rejected and preserves original timestamp | `story6_duplicate_scan_rejected` |
+
+The same file adds API, validation, invalid-token, seeded-used-token, immutable fixture, random-token, and single-process concurrency checks. `verification/hw3-part-b-browser.mjs` adds post-implementation browser checks, including offline behavior and real concurrent local HTTP submissions. Manual token entry replaces physical QR scanning for the homework scope; the typed name is not authentication. Cross-instance check-in consistency, production authorization, camera scanning, and the complete security suite are not claimed satisfied. See the requirements file's **Scope for HW3**, the README audit, and `HW3_NOTES.md`.

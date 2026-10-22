@@ -1,0 +1,48 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (1.011375ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.0795ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.718042ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.098583ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.083584ms)
+✔ Story 1: free events and the last available seat have clear labels (0.050459ms)
+✔ Story 1: no upcoming events produces an empty list (0.040167ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.087541ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (22.33325ms)
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/Danny1/Desktop/business ai/TartanTickets/lib/checkin.mjs' imported from /Users/Danny1/Desktop/business ai/TartanTickets/tests/story-6.test.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/Danny1/Desktop/business%20ai/TartanTickets/lib/checkin.mjs'
+}
+
+Node.js v26.12.1
+✖ tests/story-6.test.mjs (71.275875ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 141.200875
+
+✖ failing tests:
+
+test at tests/story-6.test.mjs:1:1
+✖ tests/story-6.test.mjs (71.275875ms)
+  'test failed'
+
+Exit status: 1

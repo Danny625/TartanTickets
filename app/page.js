@@ -10,7 +10,7 @@ export default function Home() {
       <header className="site-header">
         <a href="/" className="brand" aria-label="Tartan Tickets home"><span className="brand-mark" aria-hidden="true">t.</span>Tartan<span className="brand-light">Tickets</span></a>
         <span className="campus-label">CARNEGIE MELLON UNIVERSITY</span>
-        <span className="demo-badge">Campus demo</span>
+        <a className="checkin-nav" href="/checkin">Demo check-in</a><span className="demo-badge">Campus demo</span>
       </header>
       <main>
         <section className="hero" aria-labelledby="hero-title">
@@ -28,7 +28,7 @@ export default function Home() {
         </section>
         <EventBrowser initialEvents={listPublicEvents()} />
       </main>
-      <footer><a className="footer-brand" href="/">tartan tickets.</a><span>Made for the moments between classes.</span><span>Story 1 · Browse events demo</span></footer>
+      <footer><a className="footer-brand" href="/">tartan tickets.</a><span>Made for the moments between classes.</span><span>Stories 1 & 6 · Campus demo</span></footer>
     </>
   );
 }

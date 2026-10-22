@@ -1,6 +1,6 @@
 # Tartan Tickets
 
-A Next.js App Router prototype implementing **Story 1: Browse events** only. Students can browse upcoming published club events with date, Pittsburgh time, location, price, and seats remaining. Sold-out events show **Join waitlist** in place of **Buy**.
+A Next.js App Router prototype implementing **Story 1: Browse events** and the **Story 6: Check-in homework demo**. Students can browse upcoming published club events with date, Pittsburgh time, location, price, and seats remaining. Sold-out events show **Join waitlist** in place of **Buy**.
 
 ## Run locally
 
@@ -34,11 +34,11 @@ Optional error check: after the initial load, set your browser's developer tools
 
 ## Scope and limitations
 
-- Story 1 is implemented in source. Stories 2–6 are deferred. The Buy and Join waitlist buttons display explanatory messages only. There is no checkout, reservation, waitlist storage, ticket issuance, email, refund, event management, or check-in.
-- No payment flow is needed for browsing, so there is no payment button, Stripe integration, or card collection. A later payment story must use a **Simulated payment** button under the requested constraints.
-- Browsing is public. There is no sign-in screen, provider, password, or user data collection. Any future demo identity flow must use a typed name and must not be treated as authenticated identity.
+- Stories 1 and 6 are implemented. Stories 2–5 are deferred. Buy and Join waitlist still display explanatory messages only. There is no checkout, reservation, waitlist enrollment, purchased ticket issuance, email, refund, or event management. Story 6 uses seeded fictional sample tickets and manual QR-token entry.
+- No payment flow is needed for browsing or check-in, so there is no payment button, Stripe integration, or card collection. A later payment story must use a **Simulated payment** button under the requested constraints.
+- Browsing and demo check-in are public. There is no sign-in provider, password, role enforcement, or real attendee data. Check-in requires a typed officer-name demo label, which is validated but not stored or authenticated. Do not enter real attendee or officer information.
 - Public event data lives in server-process memory. Restarting reseeds sample dates relative to the server start date; data is not shared between processes and does not persist. If a server stays running for long enough, sample events move into the past and disappear. Refresh reloads server data; it is not a live inventory subscription.
-- API: only `GET /api/events` is implemented. It returns upcoming published events and `Cache-Control: no-store`. Mutation endpoints from later stories are absent.
+- APIs: `GET /api/events` returns upcoming published events; `GET /api/checkin` returns public fictional sample tokens; `POST /api/checkin` validates a typed name and token, marks the sample used, or returns 400/404/409. All responses use `Cache-Control: no-store`. Other mutation endpoints remain absent.
 - No AI API calls, secrets, database, analytics, external images, or remote fonts are used. Artwork is CSS and text.
 - This is a local HTTP demo. It is not a production-ready ticketing service. No performance, 500-user load, comprehensive accessibility, or production security audit has been completed. Browser smoke checks and HTTP checks are recorded below.
 - Named color tokens, visible keyboard focus, a skip link, semantic headings, text labels, live announcements, responsive layouts, and reduced-motion support are included. A browser check confirmed keyboard Enter activation of Refresh events, and desktop/390px mobile screenshots were inspected. Contrast and the complete keyboard/screen-reader flow still need a comprehensive accessibility audit.
@@ -56,7 +56,7 @@ The nine tests in `tests/story-1.test.mjs` were written and executed before the 
 
 The original tests use Node's built-in test runner and exercise the event service and API handler directly. `eventPresentation` supplies the labels that the cards render. Additional **post-implementation browser smoke checks** in `verification/browser-check.mjs` verify the rendered production app and hydrated interactions; they are separate from the nine tests written before implementation. With the server running and Chrome installed at its standard macOS location, run `node verification/browser-check.mjs` to reproduce them.
 
-The three input files in `docs/` were read. The test spec references REQ-1.1 through REQ-8.5 for workflows that do not map to the six numbered stories in the requirements file (for example, club approval is not Story 1). Accordingly, tests follow the actual **Story 1 acceptance criteria**. Later-story and security tests are not claimed to pass. The security spec also references absent assumption IDs A1–A12. Its 90-day retention requirement conflicts with the requirements file's one-year personal data retention; neither policy is implemented because this story stores no attendee data.
+The three input files in `docs/` were read. The test spec references REQ-1.1 through REQ-8.5 for workflows that do not map to the six numbered stories in the requirements file (for example, club approval is not Story 1). Accordingly, tests follow the actual **Story 1 acceptance criteria**. Only Story 1 and the scoped Story 6 tests are claimed to pass; the complete production security test suite remains unimplemented. The security spec also references absent assumption IDs A1–A12. Its 90-day retention requirement conflicts with the requirements file's one-year personal data retention; neither policy is implemented; check-in uses fictional sample names only.
 
 ### Actual execution evidence
 
@@ -88,25 +88,25 @@ Browser checks covered all card display fields, sold-out action replacement, exc
 
 ## Security spec audit
 
-This audits every requirement in `docs/Starter Spec A - Tartan Tickets - SECURITY_SPEC.md` against this Story 1 prototype. “Not satisfied” includes deferred workflows; absence of a workflow does not establish its required protection. This is a source review, not a penetration test or independent human review.
+This audits every requirement in `docs/Starter Spec A - Tartan Tickets - SECURITY_SPEC.md` against the Story 1 and scoped Story 6 homework prototype. “Not satisfied” includes deferred workflows; absence of a workflow does not establish its required protection. This is a source review, not a penetration test or independent human review.
 
 | Requirement | Status | Explanation |
 |---|---|---|
 | SEC-1 — CMU SSO; no stored passwords | partly satisfied | No passwords are collected or stored. CMU SSO is absent; browsing is public as required for this limited demo. |
-| SEC-2 — Eight-hour idle session expiration | not satisfied | No identity or sessions, hence no idle-expiration enforcement. |
+| SEC-2 — Eight-hour idle session expiration | not satisfied | The typed officer name is not a session or identity; no idle-expiration enforcement exists. |
 | SEC-3 — HTTPS everywhere and HSTS | not satisfied | Local server uses HTTP. No HTTPS redirect or HSTS is configured. |
-| SEC-4 — Server role and membership checks on every request | not satisfied | Only public browsing exists. There are no roles or membership checks. |
+| SEC-4 — Server role and membership checks on every request | not satisfied | Public browsing and demo check-in have no server-side role or membership checks. Requiring a nonempty officer label is input validation, not authorization. |
 | SEC-5 — Cross-club denial and logging | not satisfied | Public events are readable by anyone; protected club resources, permission checks, and denial logs are absent. |
-| SEC-6 — Other student's ticket returns not found | not satisfied | No tickets or ownership checks exist. Missing routes are not a ticket authorization implementation. |
+| SEC-6 — Other student's ticket returns not found | not satisfied | Only public fictional sample tickets exist. Their tokens are exposed deliberately for the demo; there is no student ownership enforcement or protected ticket lookup. |
 | SEC-7 — Stripe-hosted Checkout; no card data in servers/logs | partly satisfied | No card collection or payment logging exists. Stripe Checkout is intentionally absent under the demo constraints. |
 | SEC-8 — Charges calculated from stored price on server | not satisfied | Prices for browsing come from server records, but no charge or quantity-validation flow exists. |
 | SEC-9 — Verify webhook signatures; reject and log invalid ones | not satisfied | No Stripe webhook handler, signature verification, or rejection logging. |
 | SEC-10 — Process Stripe event IDs at most once | not satisfied | No Stripe events, idempotency storage, ticket issuance, or refunds. |
 | SEC-11 — Stripe keys in secrets manager, never source; live keys only in production | partly satisfied | No keys or environment files are required or included; `.gitignore` excludes `.env*` except `.env.example`. No secrets manager or production key policy is implemented. |
 | SEC-12 — Two approvals for connected Stripe account changes | not satisfied | No connected accounts, roles, payout changes, or approval workflow. |
-| SEC-13 — Random, PII-free QR tokens of at least 128 bits | not satisfied | No QR codes, tickets, or token generation. |
-| SEC-14 — Atomic check-in on simultaneous scans | not satisfied | No scanner, ticket state, or atomic check-in. |
-| SEC-15 — Invalid scan limit and officer notification | not satisfied | No accounts, scanning, rate limiter, or notifications. |
+| SEC-13 — Random, PII-free QR tokens of at least 128 bits | partly satisfied | Sample tokens use 16 cryptographically random bytes (128 bits), contain no PII, and are looked up on the server. The 100,000-token uniqueness/format test passes. No QR images are encoded or scanned; manual entry and public sample tokens are demo-only. |
+| SEC-14 — Atomic check-in on simultaneous scans | partly satisfied | Check-and-mark is synchronous in one server process; automated unit and 50-request local HTTP checks each produce exactly one success. State is not shared across Vercel instances and resets on restart/deploy, so production exactly-once check-in is not guaranteed. |
+| SEC-15 — Invalid scan limit and officer notification | not satisfied | Manual token check-in exists, but there are no verified accounts, invalid-scan rate limits, five-minute pauses, or officer notifications. |
 | SEC-16 — Checkout hoarding limit | not satisfied | No checkout or per-account rate limiter. |
 | SEC-17 — Only allowed purchase personal fields collected | partly satisfied | Browsing collects no purchaser personal data at all. There is no purchase schema or allowlist enforcing this rule for future purchases. |
 | SEC-18 — Remove attendee names/emails 90 days after event | not satisfied | No attendee records or scheduled retention/anonymization process. In-memory resets are not a retention policy. |
@@ -115,10 +115,84 @@ This audits every requirement in `docs/Starter Spec A - Tartan Tickets - SECURIT
 | SEC-21 — Actor, change, timestamp audit log for sensitive actions | not satisfied | No listed sensitive actions or audit logger are implemented. |
 | SEC-22 — Append-only, admin-only logs retained for a year | not satisfied | No audit-log storage, access control, immutability, or retention. |
 
-Additional requirements-file security gaps: no per-user 100-request/minute limiter, IDOR protection, webhook security tests, or concurrent-buyer test exists. They require workflows beyond Story 1. The app does set `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and a restrictive referrer policy in Next.js configuration; their delivery was confirmed on both the page and API responses. These headers do not satisfy HTTPS, authentication, or authorization requirements.
+Additional requirements-file security gaps: no per-user 100-request/minute limiter, IDOR protection, webhook security tests, or concurrent-buyer test exists. They remain outside the homework implementation; invalid-scan throttling for check-in is also unimplemented. The app does set `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and a restrictive referrer policy in Next.js configuration; their delivery was confirmed on both the page and API responses. These headers do not satisfy HTTPS, authentication, or authorization requirements.
 
 ## Public repository preparation
 
-This repository contains Story 1 only. `.gitignore` excludes `node_modules`, `.next`, and `.env*`, with an explicit exception for the secret-free `.env.example`. The example contains comments only; the app needs no configuration secrets. Generated dependencies and build output must stay untracked.
+This repository contains Story 1 and the scoped Story 6 homework demo. `.gitignore` excludes `node_modules`, `.next`, and `.env*`, with an explicit exception for the secret-free `.env.example`. The example contains comments only; the app needs no configuration secrets. Generated dependencies and build output must stay untracked.
 
 Before publication, the candidate files for the initial commit were checked with Gitleaks 8.30.1 using full redaction: no leaks found (exit 0). This checks known secret patterns; it is not a guarantee that every possible secret can be detected. The original failing test output, passing test/build output, browser verification, and screenshots remain in `verification/` as assignment evidence. These logs include local development paths but contain no required application secrets.
+
+## HW3 scope and limitations
+
+Part B adds **Story 6: Check-in** using manual QR-token entry and clearly labeled seeded sample tickets. Camera scanning and purchasing are out of scope.
+
+- **Simulated payments only:** no real payments or card collection; check-in has no payment flow.
+- **Typed names instead of authentication:** the officer name is a demo label, not verified identity or officer/club authorization. Use a fictional demo name.
+- **Server-memory storage only:** state and sample tokens reset on restart/deploy and are not shared across Vercel instances. One-process duplicate prevention is not reliable cross-instance duplicate prevention. Do not use this demo for real admission.
+
+The persistence question and the user's answer are saved in [HW3 homework notes for Part E](docs/HW3_NOTES.md). No Part C work is included.
+
+## HW3 Part B results and acceptance tests
+
+Before the check-in implementation existed, all Story 6 tests were written in `tests/story-6.test.mjs`, and `npm test` failed with `ERR_MODULE_NOT_FOUND` for `lib/checkin.mjs`: **tests 10, pass 9, fail 1, exit 1**. The nine Story 1 tests passed; the Story 6 test file could not load yet. Its ten test cases were not individually executed in that failing run. No tests were deleted, skipped, or weakened afterward.
+
+After implementation, `npm test` completed with **tests 19, pass 19, fail 0, skipped 0, exit 0** (nine Story 1 and ten Story 6 cases). `npm run build` reported **Compiled successfully in 372ms**, generated **3/3** static pages, included `/checkin` and `/api/checkin`, and exited **0**. These are actual local results, not Vercel or user manual-test results.
+
+| Acceptance criterion / safeguard | Test name in `tests/story-6.test.mjs` | Result |
+|---|---|---|
+| Story 6: a valid token marks its ticket used | `story6_valid_scan_marks_ticket_used` | Passed |
+| Story 6: subsequent scans are rejected without changing the first check-in time | `story6_duplicate_scan_rejected` | Passed |
+| Unknown token rejects without mutation | `story6_invalid_scan_rejected_without_mutation` | Passed |
+| One-process simultaneous check-in succeeds exactly once | `story6_concurrent_scans_single_checkin` | Passed |
+| Token portion of SEC-13: random 128-bit PII-free tokens; 100,000 unique samples | `story6_tokens_random_and_pii_free` | Passed |
+| Required typed name and bounded inputs | `story6_validation_rejects_missing_or_oversized_inputs` | Passed |
+| Sample snapshots cannot mutate storage; restart reseeds | `story6_sample_records_are_copies_and_restart_reseeds` | Passed |
+| Seeded used fixture is rejected | `story6_seeded_used_ticket_is_rejected` | Passed |
+| API success, duplicate 409, invalid 404, no caching | `story6_api_valid_duplicate_invalid_and_no_cache` | Passed |
+| API malformed JSON and missing name return 400 | `story6_api_malformed_json_and_missing_name_rejected` | Passed |
+
+Additional **post-implementation local browser verification**: `node verification/hw3-part-b-browser.mjs` reported **11 passed, 0 failed**. It verified loading samples, visible limitations, required name, successful/duplicate/invalid submissions, pending-state disabling, offline failure and retry, Enter activation, mobile layout, and no uncaught exceptions. It also submitted 50 concurrent real HTTP check-in requests to one local process: **1 success, 49 duplicate rejections**. The offline case was intercepted in the temporary browser session. This does not prove distributed correctness or count as the user's live-site manual checks.
+
+### Localhost click instructions
+
+The updated production app is served at **http://127.0.0.1:3000** while its local server remains running. To restart later, run `npm run build` and `npm start` in this folder. Restarting reseeds the samples; it deliberately loses all previous check-ins.
+
+1. Open http://127.0.0.1:3000 and click **Demo check-in**, or open http://127.0.0.1:3000/checkin directly.
+2. Enter **Demo Officer** in **Officer name (demo label)**.
+3. Under **Seeded sample tickets**, select and copy the token for **Sample Alex** (or another **Unused sample**). Paste it into **QR token**.
+4. Click **Check in ticket**. Expect **Checked in**, that sample attendee's name, and a timestamp. The sample changes to **Already used**.
+5. Click **Check in ticket** again with the same token. Expect **Already used** and the original timestamp, with no new success.
+6. Replace the token with **not-a-real-ticket**, then click **Check in ticket**. Expect **Invalid ticket**. No ticket should be changed.
+
+The fourth seed, **Sample Drew**, starts used and can demonstrate a rejection without consuming another sample. This demo has no reset endpoint or ticket-creation workflow; restart the local server to restore fresh samples.
+
+### Three manual checks for the live Vercel site — not yet run by the user
+
+After Vercel deploys the pushed commit, use your live site's `/checkin` page. Record **actual observed results and pass/fail yourself**; no live manual outcome is asserted here.
+
+| # | Manual action | Expected result | Actual result |
+|---|---|---|---|
+| 1 | Enter **Demo Officer**, copy a currently unused sample token from the live page, and submit it. | **Checked in**, matching fictional attendee, and check-in timestamp. | Not yet run |
+| 2 | Immediately submit the same token again. | Required rejection: **Already used**, with the original timestamp, when both requests reach the same instance. | Not yet run |
+| 3 | Submit **not-a-real-ticket** with the demo name entered. | Required rejection: **Invalid ticket**, with no admission confirmation. | Not yet run |
+
+If a valid live sample returns **Invalid ticket**, or a repeat is accepted after a restart/instance change, record what happened accurately as the acknowledged memory-only limitation. Do not claim the live duplicate check passed. Localhost is the repeatable single-process acceptance environment.
+
+### Exactly what to screenshot
+
+In your terminal, display the saved, unedited outputs (no test rerun is needed):
+
+```sh
+cat verification/hw3-part-b-tests-before.log
+cat verification/hw3-part-b-tests-after.log
+cat verification/hw3-part-b-build.log
+```
+
+Take separate screenshots:
+
+1. **Before implementation:** the missing-module error and bottom summary **tests 10 / pass 9 / fail 1 / Exit status: 1**.
+2. **After implementation:** the named Story 6 passing tests and bottom summary **tests 19 / pass 19 / fail 0 / skipped 0 / Exit status: 0**.
+3. **Build:** **Compiled successfully in 372ms**, the route list including **/checkin** and **/api/checkin**, and **Exit status: 0**.
+
+Optional extra evidence: `cat verification/hw3-part-b-browser.log` shows **11 passed, 0 failed** and the 50-request local concurrency result. Local browser screenshots are [desktop](verification/hw3-part-b-desktop.png) and [mobile](verification/hw3-part-b-mobile.png). Their visible sample tokens are public fictional fixtures, not credentials.

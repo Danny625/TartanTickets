@@ -1,0 +1,14 @@
+PASS Story 6: manual token form and four clearly labeled sample tickets load
+PASS Production authorization and server-memory limitations are visible
+PASS Empty officer label is rejected by form validation
+PASS Story 6: valid token checks in, shows attendee and timestamp; pending submission is disabled
+PASS Story 6: duplicate token rejected with Already used and original check-in timestamp
+PASS Unknown token is rejected with Invalid ticket
+PASS Offline submission never shows admission; retry after reconnect recovers
+PASS Check-in supports keyboard Enter activation
+PASS 50 real concurrent local HTTP submissions: exactly 1 success, 49 duplicate rejections (one process)
+PASS Mobile layout has no horizontal overflow; desktop/mobile screenshots saved
+PASS No uncaught browser exceptions
+HW3 Part B browser checks: 11 passed, 0 failed
+
+Exit status: 0

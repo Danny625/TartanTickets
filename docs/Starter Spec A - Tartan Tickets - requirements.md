@@ -92,3 +92,14 @@ As an officer, I want to scan tickets at the door.
 - All tests pass, including the security tests.
 - A person has reviewed the code against this spec.
 - The docs and the spec match the shipped behavior.
+
+## Scope for HW3
+
+HW3 Part B implements **Story 6: Check-in**, alongside the existing Story 1 event browser. Manual QR-token entry counts as scanning for this demo; camera access is not required by the acceptance criterion and is out of scope. Use clearly labeled seeded sample tickets, without implementing purchasing.
+
+Assignment constraints:
+- **Simulated payments only:** no real payments, Stripe integration, or card collection. Story 6 needs no payment flow.
+- **Typed names instead of authentication:** an officer name is a demo label, not verified identity, officer authorization, SSO, or club membership.
+- **Server-memory storage only:** tickets and check-in state reset on process restart/deploy and are not shared across Vercel instances. Duplicate prevention is guaranteed only inside one running server process, not across instances.
+
+No additional stories or Part C work are included. The production security specification remains the reference; unmet requirements must remain visible in the README audit.

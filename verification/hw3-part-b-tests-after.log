@@ -1,0 +1,31 @@
+npm notice run tartan-tickets@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+✔ Story 1: lists upcoming published events, excluding past, started, cancelled and draft events (0.80475ms)
+✔ Story 1: sorts events chronologically without mutating server records (0.082333ms)
+✔ Story 1: each event exposes date, Pittsburgh time, location, USD price and seats remaining (0.326208ms)
+✔ Story 1: sold-out events show Join waitlist instead of Buy (0.099291ms)
+✔ Story 1: over-capacity records never show negative inventory or Buy (0.060625ms)
+✔ Story 1: free events and the last available seat have clear labels (0.0365ms)
+✔ Story 1: no upcoming events produces an empty list (0.03625ms)
+✔ Story 1: demo inventory includes paid, free, sold-out and past events, relative to server start (0.079083ms)
+✔ Story 1: GET /api/events returns public upcoming data and prevents stale inventory caching (10.024333ms)
+✔ Story 6: story6_valid_scan_marks_ticket_used (0.409792ms)
+✔ Story 6: story6_duplicate_scan_rejected (0.102917ms)
+✔ Story 6: story6_invalid_scan_rejected_without_mutation (0.257416ms)
+✔ Story 6: story6_concurrent_scans_single_checkin (SEC-14, one process) (0.488416ms)
+✔ Story 6: story6_tokens_random_and_pii_free (token portion of SEC-13) (84.355375ms)
+✔ Story 6: story6_validation_rejects_missing_or_oversized_inputs (0.148542ms)
+✔ Story 6: story6_sample_records_are_copies_and_restart_reseeds (0.069459ms)
+✔ Story 6: story6_seeded_used_ticket_is_rejected (0.042791ms)
+✔ Story 6: story6_api_valid_duplicate_invalid_and_no_cache (8.253875ms)
+✔ Story 6: story6_api_malformed_json_and_missing_name_rejected (0.5655ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 157.601792
+
+Exit status: 0
